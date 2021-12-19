@@ -1,0 +1,27 @@
+DATAS SEGMENT
+DATAS ENDS
+
+STACKS SEGMENT
+STACKS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+MOV AX,DATAS
+MOV DS,AX
+MOV  CX,6;循环6次
+        st2:;输出#
+            LEA DX,'#$'
+            MOV AH,09h
+            INT 21h
+            MOV DL,0ah
+            MOV AH,02h
+            INT 21h
+        LOOP st2
+
+
+MOV AH,4CH
+INT 21H
+
+CODES ENDS
+END START

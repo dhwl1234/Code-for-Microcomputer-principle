@@ -1,0 +1,95 @@
+
+
+DATA SEGMENT
+
+IN0 EQU 298H
+
+DATA ENDS
+
+CODE SEGMENT
+
+ASSUME CS: CODE
+
+START:
+
+MOV DX, IN0
+
+OUT DX, AL ;产生ALE、START信号
+
+;启动AD转换,与AL内容无关
+
+MOV CX, 0FFH ; 延时100us
+
+DELAY:
+
+LOOP DELAY ;CX不等于0,LOOP DELAY
+
+IN AL, DX ;读取转换结果
+
+MOV BL,AL ;将AL保存到BL
+
+MOV CL,4
+
+SHR AL,CL ;将AL右移四位
+
+CALL DISP ;调用显示子程序显示其高四位
+
+MOV AL,BL ;将BL保存的值还给AL
+
+AND AL,0FH ;高四位清零
+
+CALL DISP ; 调用显示子程序显示其低四位
+
+MOV AH, 2 ;2号调用
+
+MOV DL, 10
+
+INT 21H
+
+MOV DL, 13
+
+INT 21H ; 输出回车、换行
+
+PUSH DX
+
+MOV AH, 6
+
+MOV DL, 0FFH ; 检测是否有键按下
+
+INT 21H
+
+POP DX
+
+;CMP ZF,1
+
+JE START ; 没有,转START
+
+MOV AH, 4CH
+
+INT 21H
+
+DISP PROC NEAR
+
+MOV DL,AL
+
+CMP DL,9 ;比较DL是否大于9
+
+JLE DD ;若为0-9，加30H为其ASCII码
+
+ADD DL,7 ;否则再加7
+
+DD:
+
+ADD DL,30H
+
+MOV AH,6 ;在屏幕显示
+
+INT 21H
+
+RET
+
+DISP ENDP
+
+CODE ENDS
+
+END START

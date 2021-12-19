@@ -1,0 +1,89 @@
+Microsoft (R) Macro Assembler Version 6.11		    11/08/20 20:48:33
+tempfile.asm						     Page 1 - 1
+
+
+ 0000				DATAS SEGMENT
+ 0000 14			  BUF DB 20  ;用户设定接受的字符数
+ 0001 00			  SBUF DB ?  ;预留单元，实际接收的字符数
+ 0002  0014 [			  DATARECEIVE DB 20 DUP(?)
+        00
+       ]
+ 0016  0014 [			  DATARESULT  DB 20 DUP(?)
+        00
+       ]
+ 002A 0D 0A 24			  CR DB 0DH,0AH,'$'
+ 002D				DATAS ENDS
+
+ 0000				STACKS SEGMENT
+ 0000				STACKS ENDS
+
+ 0000				CODES SEGMENT
+				   ASSUME CS:CODES,DS:DATAS,SS:STACKS
+ 0000				START:
+ 0000  B8 ---- R		MOV AX,DATAS
+ 0003  8E D8			MOV DS,AX
+				;此处输入代码
+ 0005  BA 0000 R		MOV DX,OFFSET BUF
+ 0008  B4 0A			MOV AH,10
+ 000A  CD 21			INT 21H
+				;换行
+ 000C  BA 002A R		MOV DX,OFFSET CR
+ 000F  B4 09			MOV AH,9
+ 0011  CD 21			INT 21H
+				;初始化
+ 0013  B9 0000			MOV CX,0
+ 0016  8A 0E 0001 R		MOV CL,SBUF
+ 001A  BB 0000			MOV BX,0
+
+ 001D				DEAL:
+ 001D  8A 87 0002 R		MOV AL,DATARECEIVE[BX]
+ 0021  3C 41			CMP AL,41H
+ 0023  72 06			JB NEXT
+ 0025  3C 5A			CMP AL,5AH
+ 0027  77 02			JA NEXT
+ 0029  04 20			ADD AL,20H
+
+ 002B				NEXT:
+ 002B  88 87 0016 R		MOV DATARESULT[BX],AL
+ 002F  43			INC BX
+ 0030  E2 EB			LOOP DEAL
+
+ 0032  BA 0016 R		MOV DX,OFFSET DATARESULT
+ 0035  B4 09			MOV AH,9
+ 0037  CD 21			INT 21H
+
+ 0039  B4 4C			MOV AH,4CH
+ 003B  CD 21			INT 21H
+ 003D				CODES ENDS
+				END START
+
+Microsoft (R) Macro Assembler Version 6.11		    11/08/20 20:48:33
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODES  . . . . . . . . . . . . .	16 Bit	 003D	  Para	  Private 
+DATAS  . . . . . . . . . . . . .	16 Bit	 002D	  Para	  Private 
+STACKS . . . . . . . . . . . . .	16 Bit	 0000	  Para	  Private 
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+BUF  . . . . . . . . . . . . . .	Byte	 0000	  DATAS	
+CR . . . . . . . . . . . . . . .	Byte	 002A	  DATAS	
+DATARECEIVE  . . . . . . . . . .	Byte	 0002	  DATAS	
+DATARESULT . . . . . . . . . . .	Byte	 0016	  DATAS	
+DEAL . . . . . . . . . . . . . .	L Near	 001D	  CODES	
+NEXT . . . . . . . . . . . . . .	L Near	 002B	  CODES	
+SBUF . . . . . . . . . . . . . .	Byte	 0001	  DATAS	
+START  . . . . . . . . . . . . .	L Near	 0000	  CODES	
+
+	   0 Warnings
+	   0 Errors

@@ -1,0 +1,75 @@
+Microsoft (R) Macro Assembler Version 6.11		    11/08/20 21:46:27
+tempfile.asm						     Page 1 - 1
+
+
+ 0000				DATAS SEGMENT
+ 0000 48 45 4C 4C 4F 20		    STRR DB 'HELLO WORLD!$'          ;待处理字符串
+       57 4F 52 4C 44 21
+       24
+ 000D = 000D			     LEN EQU $-STRR                  ;字符串中包含的字符个数
+ 000D				DATAS ENDS
+ 0000				STACKS SEGMENT
+ 0000				STACKS ENDS
+
+ 0000				CODES SEGMENT
+				    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+ 0000				START:
+ 0000  B8 ---- R		MOV AX,DATAS
+ 0003  8E D8			MOV DS,AX
+
+ 0005  BB 0000 R		MOV BX,OFFSET STRR    ;设置地址指针
+ 0008  B9 000D			MOV CX,LEN            ;设置循环次数
+
+ 000B  8A 07			CHECK:MOV AL,[BX]
+ 000D  3C 41			CMP AL,'A'
+ 000F  72 08			JB NEXT
+ 0011  3C 5A			CMP AL,'Z'
+ 0013  77 04			JA NEXT
+ 0015  04 20			ADD AL,20H
+ 0017  88 07			MOV [BX],AL
+
+ 0019				NEXT:
+ 0019  43			INC BX
+ 001A  49			DEC CX
+ 001B  75 EE			JNZ CHECK
+
+
+				;字符串输出
+ 001D  BA 0000 R		MOV DX,OFFSET STRR
+ 0020  B4 09			MOV AH,9
+ 0022  CD 21			INT 21H
+
+
+
+ 0024  B4 4C			MOV AH,4CH
+ 0026  CD 21			INT 21H
+
+ 0028				CODES ENDS
+				END START
+Microsoft (R) Macro Assembler Version 6.11		    11/08/20 21:46:27
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODES  . . . . . . . . . . . . .	16 Bit	 0028	  Para	  Private 
+DATAS  . . . . . . . . . . . . .	16 Bit	 000D	  Para	  Private 
+STACKS . . . . . . . . . . . . .	16 Bit	 0000	  Para	  Private 
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+CHECK  . . . . . . . . . . . . .	L Near	 000B	  CODES	
+LEN  . . . . . . . . . . . . . .	Number	 000Dh	 
+NEXT . . . . . . . . . . . . . .	L Near	 0019	  CODES	
+START  . . . . . . . . . . . . .	L Near	 0000	  CODES	
+STRR . . . . . . . . . . . . . .	Byte	 0000	  DATAS	
+
+	   0 Warnings
+	   0 Errors

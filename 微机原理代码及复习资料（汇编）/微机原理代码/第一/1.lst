@@ -1,0 +1,102 @@
+Microsoft (R) Macro Assembler Version 6.11		    11/04/20 17:43:05
+tempfile.asm						     Page 1 - 1
+
+
+ 0000				DATAS SEGMENT
+				    ;此处输入数据段代码
+ 0000 0D 0A 24			    CR DB 0DH,0AH,'$'  ;换行回车
+ 0003 59 45 53 24		    STR1 DB 'YES$'
+ 0007 4E 4F 24			    STR2 DB 'NO$'
+ 000A 70 6C 65 61 73 65		    STR3 DB 'please input again$'  
+       20 69 6E 70 75 74
+       20 61 67 61 69 6E
+       24
+ 001D				DATAS ENDS
+
+ 0000				STACKS SEGMENT
+				    ;此处输入堆栈段代码
+ 0000				STACKS ENDS
+
+ 0000				CODES SEGMENT
+				    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+ 0000				START:
+ 0000  B8 ---- R		    MOV AX,DATAS
+ 0003  8E D8			    MOV DS,AX
+				    ;此处输入代码段代码
+ 0005				    AGAIN:
+ 0005  B4 01			    MOV AH,1   
+ 0007  CD 21			    INT 21H
+				    ;输出换行
+ 0009  BA 0000 R		    MOV DX,OFFSET CR
+ 000C  B4 09			    MOV AH,9   ;调用DOS功能，该功能为显示DS：DX地址处的字符
+ 000E  CD 21			    INT 21H
+				    ;判断
+ 0010  3C 59			    CMP AL,59H
+ 0012  74 15			    JE YES  ;等于跳转
+ 0014  3C 79			    CMP AL,79H
+ 0016  74 11			    JE YES
+ 0018  3C 4E			    CMP AL,4EH
+ 001A  74 16			    JE NO
+				    
+ 001C  3C 6E			    CMP AL,6EH
+ 001E  74 12			    JE NO
+				    
+ 0020				    erro:
+ 0020  BA 000A R		    MOV DX,OFFSET STR3
+ 0023  B4 09			    MOV AH,9
+ 0025  CD 21			    INT 21H
+ 0027  EB DC			    JMP AGAIN
+				    
+				    
+ 0029				    YES:
+ 0029  BA 0003 R		    MOV DX,OFFSET STR1
+ 002C  B4 09			    MOV AH,9
+ 002E  CD 21			    INT 21H
+ 0030  EB 09			    JMP LAST
+				    
+ 0032				    NO:
+ 0032  BA 0007 R		    MOV DX,OFFSET STR2
+ 0035  B4 09			    MOV AH,9
+ 0037  CD 21			    INT 21H
+ 0039  EB 00			    JMP LAST
+				    
+ 003B				    LAST:
+ 003B  B4 4C			    MOV AH,4CH
+ 003D  CD 21			    INT 21H
+ 003F				CODES ENDS
+				    END START
+
+
+
+Microsoft (R) Macro Assembler Version 6.11		    11/04/20 17:43:05
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODES  . . . . . . . . . . . . .	16 Bit	 003F	  Para	  Private 
+DATAS  . . . . . . . . . . . . .	16 Bit	 001D	  Para	  Private 
+STACKS . . . . . . . . . . . . .	16 Bit	 0000	  Para	  Private 
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+AGAIN  . . . . . . . . . . . . .	L Near	 0005	  CODES	
+CR . . . . . . . . . . . . . . .	Byte	 0000	  DATAS	
+LAST . . . . . . . . . . . . . .	L Near	 003B	  CODES	
+NO . . . . . . . . . . . . . . .	L Near	 0032	  CODES	
+START  . . . . . . . . . . . . .	L Near	 0000	  CODES	
+STR1 . . . . . . . . . . . . . .	Byte	 0003	  DATAS	
+STR2 . . . . . . . . . . . . . .	Byte	 0007	  DATAS	
+STR3 . . . . . . . . . . . . . .	Byte	 000A	  DATAS	
+YES  . . . . . . . . . . . . . .	L Near	 0029	  CODES	
+erro . . . . . . . . . . . . . .	L Near	 0020	  CODES	
+
+	   0 Warnings
+	   0 Errors

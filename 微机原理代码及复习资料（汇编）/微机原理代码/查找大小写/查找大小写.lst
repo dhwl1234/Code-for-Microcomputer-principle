@@ -1,0 +1,92 @@
+Microsoft (R) Macro Assembler Version 6.11		    11/10/20 00:03:04
+tempfile.asm						     Page 1 - 1
+
+
+ 0000				DATAS SEGMENT
+ 0000 01 02 03 04 05 06		    NUM DB 1,2,3,4,5,6,7,8,9,10,-1,-2,-3,-4,-5,-6,-7,-8,-9,-10
+       07 08 09 0A FF FE
+       FD FC FB FA F9 F8
+       F7 F6
+ 0014 = 0014			    COUNT EQU $-NUM
+ 0014  000A [			    PLUS DB 10 DUP(?)
+        00
+       ]
+ 001E  000A [			    MINUS DB 10 DUP(?)
+        00
+       ]
+				    
+				    
+ 0028				DATAS ENDS
+
+ 0000				STACKS SEGMENT
+ 0000				STACKS ENDS
+
+ 0000				CODES SEGMENT
+				    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+ 0000				START:
+ 0000  B8 ---- R		MOV AX,DATAS
+ 0003  8E D8			MOV DS,AX
+
+				;≥ı ºªØ
+ 0005  B9 0014			MOV CX,COUNT
+ 0008  BB 0000 R		MOV BX,OFFSET NUM
+ 000B  BE 0014 R		MOV SI,OFFSET PLUS
+ 000E  BF 001E R		MOV DI,OFFSET MINUS
+
+ 0011				DEAL:
+ 0011  8A 07			MOV AL,[BX]
+ 0013  3C 00			CMP AL,0
+ 0015  7F 02			JG POSI
+ 0017  3C 00			CMP AL,0
+
+ 0019				POSI:
+ 0019  88 04			MOV [SI],AL
+ 001B  46			INC SI
+ 001C  EB 05			JMP EXTI
+ 001E				NEGA:
+ 001E  88 05			MOV [DI],AL
+ 0020  47			INC DI
+ 0021  EB 00			JMP EXTI
+ 0023				EXTI:
+ 0023  43			INC BX
+ 0024  49			DEC CX
+ 0025  75 EA			JNZ DEAL
+
+ 0027  B4 4C			MOV AH,4CH
+ 0029  CD 21			INT 21H
+
+ 002B				CODES ENDS
+				END START
+
+
+Microsoft (R) Macro Assembler Version 6.11		    11/10/20 00:03:04
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODES  . . . . . . . . . . . . .	16 Bit	 002B	  Para	  Private 
+DATAS  . . . . . . . . . . . . .	16 Bit	 0028	  Para	  Private 
+STACKS . . . . . . . . . . . . .	16 Bit	 0000	  Para	  Private 
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+COUNT  . . . . . . . . . . . . .	Number	 0014h	 
+DEAL . . . . . . . . . . . . . .	L Near	 0011	  CODES	
+EXTI . . . . . . . . . . . . . .	L Near	 0023	  CODES	
+MINUS  . . . . . . . . . . . . .	Byte	 001E	  DATAS	
+NEGA . . . . . . . . . . . . . .	L Near	 001E	  CODES	
+NUM  . . . . . . . . . . . . . .	Byte	 0000	  DATAS	
+PLUS . . . . . . . . . . . . . .	Byte	 0014	  DATAS	
+POSI . . . . . . . . . . . . . .	L Near	 0019	  CODES	
+START  . . . . . . . . . . . . .	L Near	 0000	  CODES	
+
+	   0 Warnings
+	   0 Errors
